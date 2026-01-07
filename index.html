@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PizzaHub - Advanced Pizza Delivery</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-pizza-slice"></i>
+                <span>PizzaHub</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active" data-page="home">Home</a>
+                <a href="#menu" class="nav-link" data-page="menu">Menu</a>
+                <a href="#orders" class="nav-link" data-page="orders">My Orders</a>
+                <a href="#admin" class="nav-link" data-page="admin">Admin</a>
+            </div>
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="auth-btn" id="authBtn">Login</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <section id="home-page" class="page active">
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Welcome to PizzaHub</h1>
+                <p>Delicious pizzas delivered to your doorstep in 30 minutes!</p>
+                <button class="btn btn-primary" onclick="navigateToPage('menu')">Order Now</button>
+            </div>
+            <div class="hero-image">
+                <i class="fas fa-pizza-slice"></i>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <i class="fas fa-bolt"></i>
+                <h3>Fast Delivery</h3>
+                <p>30-minute guarantee or it's free!</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-star"></i>
+                <h3>Premium Quality</h3>
+                <p>Fresh ingredients, authentic recipes</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-lock"></i>
+                <h3>Secure Payment</h3>
+                <p>Safe and encrypted transactions</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-map-location-dot"></i>
+                <h3>Real-time Tracking</h3>
+                <p>Track your order every step of the way</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Page -->
+    <section id="menu-page" class="page">
+        <div class="menu-container">
+            <div class="menu-header">
+                <h2>Our Menu</h2>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="vegetarian">Vegetarian</button>
+                    <button class="filter-btn" data-filter="meat">Meat Lovers</button>
+                    <button class="filter-btn" data-filter="special">Specials</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search pizzas...">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+
+            <div id="pizzaGrid" class="pizza-grid"></div>
+        </div>
+    </section>
+
+    <!-- My Orders Page -->
+    <section id="orders-page" class="page">
+        <div class="orders-container">
+            <h2>My Orders</h2>
+            <div id="ordersList" class="orders-list"></div>
+        </div>
+    </section>
+
+    <!-- Admin Page -->
+    <section id="admin-page" class="page">
+        <div class="admin-container">
+            <h2>Admin Dashboard</h2>
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" data-tab="orders">All Orders</button>
+                <button class="admin-tab-btn" data-tab="analytics">Analytics</button>
+                <button class="admin-tab-btn" data-tab="menu-mgmt">Menu Management</button>
+            </div>
+
+            <div id="orders-tab" class="admin-tab active">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminOrdersBody"></tbody>
+                </table>
+            </div>
+
+            <div id="analytics-tab" class="admin-tab">
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h4>Total Orders</h4>
+                        <p id="totalOrders" class="analytics-value">0</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Total Revenue</h4>
+                        <p id="totalRevenue" class="analytics-value">$0.00</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Average Order Value</h4>
+                        <p id="avgOrderValue" class="analytics-value">$0.00</p>
+                    </div>
+                    <div class="analytics-card">
+                        <h4>Completed Orders</h4>
+                        <p id="completedOrders" class="analytics-value">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="menu-mgmt-tab" class="admin-tab">
+                <button class="btn btn-primary" id="addPizzaBtn">Add New Pizza</button>
+                <div id="menuMgmtList" class="menu-mgmt-list"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login / Register</h2>
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" data-auth-tab="login">Login</button>
+                <button class="auth-tab-btn" data-auth-tab="register">Register</button>
+            </div>
+
+            <form id="loginForm" class="auth-tab-content active">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+
+            <form id="registerForm" class="auth-tab-content">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Phone</label>
+                    <input type="tel" id="registerPhone" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pizza Detail Modal -->
+    <div id="pizzaModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <div class="pizza-detail">
+                <div class="pizza-image">
+                    <i class="fas fa-pizza-slice"></i>
+                </div>
+                <div class="pizza-info">
+                    <h2 id="pizzaName"></h2>
+                    <p id="pizzaDescription"></p>
+                    <div class="price-section">
+                        <span id="pizzaPrice" class="price">$0.00</span>
+                    </div>
+
+                    <div class="customization">
+                        <div class="form-group">
+                            <label>Size</label>
+                            <select id="pizzaSize">
+                                <option value="small">Small (10")</option>
+                                <option value="medium" selected>Medium (12")</option>
+                                <option value="large">Large (14")</option>
+                                <option value="xlarge">X-Large (16")</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Crust Type</label>
+                            <select id="pizzaCrust">
+                                <option value="thin">Thin Crust</option>
+                                <option value="hand_tossed" selected>Hand Tossed</option>
+                                <option value="pan">Pan Pizza</option>
+                                <option value="stuffed">Stuffed Crust</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Extra Toppings</label>
+                            <div class="toppings-list" id="toppingsList"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <div class="quantity-selector">
+                                <button class="qty-btn" id="decreaseQty">-</button>
+                                <input type="number" id="pizzaQuantity" value="1" min="1">
+                                <button class="qty-btn" id="increaseQty">+</button>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" id="addToCartBtn">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cartItems" class="cart-items"></div>
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee:</span>
+                    <span id="deliveryFee">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (10%):</span>
+                    <span id="tax">$0.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="total">$0.00</span>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="checkoutBtn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <h2>Checkout</h2>
+            <div class="checkout-form">
+                <div class="checkout-section">
+                    <h3>Delivery Address</h3>
+                    <div class="form-group">
+                        <label for="deliveryAddress">Address</label>
+                        <input type="text" id="deliveryAddress" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="deliveryCity">City</label>
+                            <input type="text" id="deliveryCity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deliveryZip">Zip Code</label>
+                            <input type="text" id="deliveryZip" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-section">
+                    <h3>Payment Method</h3>
+                    <div class="payment-methods">
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="card" checked>
+                            <span>Credit Card</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="paypal">
+                            <span>PayPal</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="cash">
+                            <span>Cash on Delivery</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="checkout-section" id="cardSection">
+                    <h3>Card Details</h3>
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cardExpiry">Expiry Date</label>
+                            <input type="text" id="cardExpiry" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardCVV">CVV</label>
+                            <input type="text" id="cardCVV" placeholder="123" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="placeOrderBtn">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content confirmation-content">
+            <div class="confirmation-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Order Confirmed!</h2>
+            <p id="confirmationMessage"></p>
+            <div id="orderConfirmationDetails" class="order-confirmation-details"></div>
+            <button class="btn btn-primary" onclick="closeModal('confirmationModal')">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
